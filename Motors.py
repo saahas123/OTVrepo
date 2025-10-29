@@ -42,12 +42,33 @@ def move_forward(speed):
     right_forward(speed)
 
 
-def turnLeft(angle):
-    while(enes.theta != angle):
-        right_forward(30)
-        left_backward()
-def turnRight(angle):
-    while(enes.theta != angle):
-        right_backward(30)
+def turnLeft(target_angle, tolerance=0.05):
+    """Turn left until within tolerance of target_angle."""
+    print(f"Turning left to {target_angle}°")
+    current_angle = enes100.theta()
+    left_backward(30)
+    right_forward(30)
+    while abs(current_angle - target_angle) > tolerance:
+        
+        current_angle = enes100.theta()
+        print(f"Current angle: {current_angle}")
+
+    stop_all()
+    print("Turn left complete!\n")
+
+
+def turnRight(target_angle, tolerance=0.05):
+    """Turn right until within tolerance of target_angle."""
+    print(f"Turning right to {target_angle}°")
+    current_angle = enes100.theta()
         left_forward(30)
+        right_backward(30)
+    while abs(current_angle - target_angle) > tolerance:
+        
+        current_angle = enes100.theta()
+        print(f"Current angle: {current_angle}")
+
+    stop_all()
+    print("Turn right complete!\n")
+
 

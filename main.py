@@ -1,6 +1,25 @@
-ultrasonic1 = #sdasd
-ultrasonic2 = #asd
-x,y = #global
+from enes100 import enes100
+import time
+from Motors import turnLeft, turnRight
+from machine import Pin, time_pulse_us
+
+#ultra1
+TRIG1 = Pin(12, Pin.OUT)
+ECHO1 = Pin(14, Pin.IN)
+
+# --- Ultrasonic Sensor 2 Pins ---
+TRIG2 = Pin(27, Pin.OUT)
+ECHO2 = Pin(26, Pin.IN)
+
+enes100.begin("TheDropouts", "Material", 522, 1120)
+
+# Confirm connection
+while not enes100.is_connected():
+    print("Waiting for connection to Vision System...")
+    time.sleep(1)
+
+print("Connected to Vision System!")
+
 def navigateStage1():
     if(CheckPositionStart() == "top"):
              turnLeft(180)
@@ -84,4 +103,32 @@ def navigateStage3:
         moveEnd()
 def moveUntilObstacle:
     while(ultrasonic1 > 10 || ultrasonic2>10):
-        moveforward()
+
+    moveforward()
+
+
+
+
+# --- Get distance from Ultrasonic Sensor 1 ---
+def get_distance_ultra1():
+    TRIG1.off()
+    time.sleep_us(2)
+    TRIG1.on()
+    time.sleep_us(10)
+    TRIG1.off()
+    
+    duration = time_pulse_us(ECHO1, 1, 30000)  # timeout 30ms
+    distance = (duration * 0.0343) / 2  # cm
+    return distance
+
+# --- Get distance from Ultrasonic Sensor 2 ---
+def get_distance_ultra2():
+    TRIG2.off()
+    time.sleep_us(2)
+    TRIG2.on()
+    time.sleep_us(10)
+    TRIG2.off()
+    
+    duration = time_pulse_us(ECHO2, 1, 30000)
+    distance = (duration * 0.0343) / 2
+    return distance

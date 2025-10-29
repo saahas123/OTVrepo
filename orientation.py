@@ -2,7 +2,7 @@ from enes100 import enes100
 import time
 
 # Initialize connection to the ENES100 Vision System
-enes100.begin("AcebotTeam", "FIRE", 522, 1120)
+enes100.begin("theDropouts", "MATERIALS", 522, 1120)
 
 # Confirm connection
 while not enes100.is_connected():

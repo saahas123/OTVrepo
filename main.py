@@ -97,7 +97,7 @@ def navigateStage3():
         moveEnd()
 def moveUntilObstacle():
     while(Sensors.getUltra1 > 0.1 || Sensors.getUltra2>0.1):
-        moveforward()
+        moveforward(40)
 
     stop_all()
 
@@ -112,18 +112,19 @@ def checkRow():
 
 def move_until_row2():
     while abs(enes100.y - 1.0) > 0.05:
-        move_forward()
+        move_forward(40)
         time.sleep(0.1)  # small delay to prevent CPU overload
     stop_all()
 def move_until_row1():
     while abs(enes100.y - 1.5) > 0.05:
-        move_forward()
+        move_forward(40)
         time.sleep(0.1)
     stop_all()
 def move_until_row3():
     while abs(enes100.y - 0.5) > 0.05:
-        move_forward()
+        move_forward(40)
         time.sleep(0.1)
     stop_all()
+
 
 

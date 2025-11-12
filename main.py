@@ -1,15 +1,9 @@
 from enes100 import enes100
 import time
-from Motors import turnLeft, turnRight
+from Motors import turnLeft, turnRight, move_forward, stop_all
 from machine import Pin, time_pulse_us
+import Sensors
 
-#ultra1
-TRIG1 = Pin(12, Pin.OUT)
-ECHO1 = Pin(14, Pin.IN)
-
-# --- Ultrasonic Sensor 2 Pins ---
-TRIG2 = Pin(27, Pin.OUT)
-ECHO2 = Pin(26, Pin.IN)
 
 enes100.begin("TheDropouts", "Material", 522, 1120)
 
@@ -33,7 +27,7 @@ def navigateStage1():
         completeMission()
         turnRight(90);
         
-def navigateStage2:
+def navigateStage2():
     l = #middle
     prevRow = #asd
     a = #end
@@ -93,7 +87,7 @@ def navigateStage2:
             prevrow = 3
         
     
-def navigateStage3:
+def navigateStage3():
     if(checkLog == false):
         turnLeft(90)
         moveUntilLog()
@@ -101,34 +95,35 @@ def navigateStage3:
         moveEnd()
     else:
         moveEnd()
-def moveUntilObstacle:
-    while(ultrasonic1 > 10 || ultrasonic2>10):
+def moveUntilObstacle():
+    while(Sensors.getUltra1 > 0.1 || Sensors.getUltra2>0.1):
+        moveforward()
 
-    moveforward()
+    stop_all()
 
-
-
-
-# --- Get distance from Ultrasonic Sensor 1 ---
-def get_distance_ultra1():
-    TRIG1.off()
-    time.sleep_us(2)
-    TRIG1.on()
-    time.sleep_us(10)
-    TRIG1.off()
+def checkRow():
+    if(enes100.y > 1.2):
+        return 1;
+    else if(enes100.y < 1.2 && enes100.y > 0.65):
+        return 2;
+    else:
+        return 3;
     
-    duration = time_pulse_us(ECHO1, 1, 30000)  # timeout 30ms
-    distance = (duration * 0.0343) / 2  # cm
-    return distance
 
-# --- Get distance from Ultrasonic Sensor 2 ---
-def get_distance_ultra2():
-    TRIG2.off()
-    time.sleep_us(2)
-    TRIG2.on()
-    time.sleep_us(10)
-    TRIG2.off()
-    
-    duration = time_pulse_us(ECHO2, 1, 30000)
-    distance = (duration * 0.0343) / 2
-    return distance
+def move_until_row2():
+    while abs(enes100.y - 1.0) > 0.05:
+        move_forward()
+        time.sleep(0.1)  # small delay to prevent CPU overload
+    stop_all()
+def move_until_row1():
+    while abs(enes100.y - 1.5) > 0.05:
+        move_forward()
+        time.sleep(0.1)
+    stop_all()
+def move_until_row3():
+    while abs(enes100.y - 0.5) > 0.05:
+        move_forward()
+        time.sleep(0.1)
+    stop_all()
+
+

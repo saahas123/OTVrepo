@@ -1,12 +1,12 @@
 from machine import Pin, time_pulse_us
 import time
 
-TRIG1 = Pin(2, Pin.OUT)
-ECHO1 = Pin(3, Pin.IN)
+TRIG1 = Pin(16, Pin.OUT)
+ECHO1 = Pin(39, Pin.IN)
 
 # --- Sensor 2 Pins ---
-TRIG2 = Pin(4, Pin.OUT)
-ECHO2 = Pin(5, Pin.IN)
+TRIG2 = Pin(18, Pin.OUT)
+ECHO2 = Pin(36, Pin.IN)
 def get_distance(trig, echo):
     # Send a 10µs pulse
     trig.value(0)
@@ -29,4 +29,3 @@ def getUltra1():
 
 def getUltra2():
     return get_distance(TRIG2, ECHO2)
-

@@ -16,16 +16,16 @@ print("Connected to Vision System!")
 
 def navigateStage1():
     if(CheckPositionStart() == "top"):
-             turnLeft(180)
+             turnLeftTo(180)
              moveUntilObj()
              completeMission()
-             turnLeft(90);
+             turnLeftTo(90);
              
     else:
-        turnLeft(360)
+        turnLeftTo(360)
         moveUntilObj()
         completeMission()
-        turnRight(90);
+        turnRightTo(90);
         
 def navigateStage2():
     l = #middle
@@ -34,64 +34,64 @@ def navigateStage2():
     while(x < l):
         moveUntilObstacle()
         if(checkrow() == 1):
-            turnright(90)
+            turnRightTo(90)
             moveUntilRow2()
-            turnLeft(90)
+            turnLeftTo(90)
             prevRow = 1
         else if(checkrow() == 2):
             if(prevRow == 1):
-                turnright(90)
+                turnRightTo(90)
                 moveUntilRow3()
                 turnLeft(90)
             else if(prevRow == 3):
-                turnLeft(90)
+                turnLeftTo(90)
                 moveUntilRow1()
-                turnRight(90)
+                turnRightTo(90)
             else:
-                turnLeft(90)
+                turnLeftTo(90)
                 moveUntilRow1()
-                turnRight(90)
+                turnRightTo(90)
                 
         else:
-            turnLeft(90)
+            turnLeftTo(90)
             moveUntilRow2()
-            turnRight(90)
+            turnRightTo(90)
             prevRow = 3
             
     prevrow = null
     while(x < a):
         moveUntilObstacle()
         if(checkrow() == 1):
-            turnright(90)
+            turnRightTo(90)
             moveUntilRow2()
-            turnLeft(90)
+            turnLeftTo(90)
             prevrow = 1
         else if(checkrow() == 2):
             if(prevrow == 1):
-                turnright(90)
+                turnRightTo(90)
                 moveUntilRow3()
-                turnLeft(90)
+                turnLeftTo(90)
             else if(prevRow == 3):
-                turnLeft(90)
+                turnLeftTo(90)
                 moveUntilRow1()
-                turnRight(90)
+                turnRightTo(90)
             else:
-                turnLeft(90)
+                turnLeftTo(90)
                 moveUntilRow1()
-                turnRight(90)
+                turnRightTo(90)
                 
         else:
-            turnLeft(90)
+            turnLeftTo(90)
             moveUntilRow2()
-            turnRight(90)
+            turnRightTo(90)
             prevrow = 3
         
     
 def navigateStage3():
     if(checkLog == false):
-        turnLeft(90)
+        turnLeftTo(90)
         moveUntilLog()
-        turnRight(90)
+        turnRightTo(90)
         moveEnd()
     else:
         moveEnd()

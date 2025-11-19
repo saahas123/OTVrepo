@@ -58,11 +58,11 @@ def move_backward(speed):
     left_backward(speed)
     right_backward(speed)
 
-def turn_left(speed):
+def turnLeft(speed):
     left_backward(speed)
     right_forward(speed)
 
-def turn_right(speed):
+def turnRight(speed):
     left_forward(speed)
     right_backward(speed)
     

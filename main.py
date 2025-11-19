@@ -3,7 +3,7 @@ import time
 from Motors import turnLeft, turnRight, move_forward, stop_all
 from machine import Pin, time_pulse_us
 import Sensors
-
+import math
 
 enes100.begin("TheDropouts", "Material", 522, 1120)
 
@@ -125,6 +125,41 @@ def move_until_row3():
         move_forward(40)
         time.sleep(0.1)
     stop_all()
+
+
+def normalize_angle(theta):
+    # Keeps angle between -pi and +pi
+    return math.atan2(math.sin(theta), math.cos(theta))
+
+def turnRightTo(targetTheta, speed=20):
+    tolerance = 0.05  # radians (~3 degrees)
+
+    # Normalize target
+    targetTheta = normalize_angle(targetTheta)
+
+    # Read current angle
+    currentTheta = normalize_angle(enes100.theta)
+
+    while abs(normalize_angle(currentTheta - targetTheta)) > tolerance:
+        turnLeft(-speed)  # negative = turn right
+        time.sleep(0.05)
+        currentTheta = normalize_angle(enes100.theta)
+
+    stopMotors()
+    time.sleep(0.05)
+def turnLeftTo(targetTheta, speed=20):
+    tolerance = 0.05
+
+    targetTheta = normalize_angle(targetTheta)
+    currentTheta = normalize_angle(enes100.theta)
+
+    while abs(normalize_angle(currentTheta - targetTheta)) > tolerance:
+        turnLeft(speed)
+        time.sleep(0.05)
+        currentTheta = normalize_angle(enes100.theta)
+
+    stopMotors()
+    time.sleep(0.05)
 
 
 

@@ -5,16 +5,19 @@ from machine import Pin, time_pulse_us
 import Sensors
 import math
 
-enes100.begin("TheDropouts", "Material", 522, 1120)
+
+enes100.begin("TheDropouts", "Material", 402, 1120)
 
 # Confirm connection
 while not enes100.is_connected():
     print("Waiting for connection to Vision System...")
     time.sleep(1)
 
+enes.print("Connected to Vision System!")
 print("Connected to Vision System!")
 
-navigateStage2()
+
+
 
 def navigateStage1():
     if(CheckPositionStart() == "top"):

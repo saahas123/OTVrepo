@@ -6,7 +6,7 @@ import Sensors
 import math
 
 
-enes100.begin("TheDropouts", "Material", 402, 1120)
+enes100.begin("TheDropouts", "Material", 247, 1120)
 
 # Confirm connection
 while not enes100.is_connected():
@@ -17,6 +17,9 @@ enes.print("Connected to Vision System!")
 print("Connected to Vision System!")
 
 
+turnLeft(20)
+time.sleep(3)
+stop_all()
 
 
 def navigateStage1():
@@ -122,7 +125,7 @@ def navigateStage3():
     else:
         moveEnd()
 def moveUntilObstacle():
-    while(Sensors.getUltra1 > 0.1 || Sensors.getUltra2>0.1):
+    while(Sensors.getUltra1 > 0.1 or Sensors.getUltra2>0.1):
         moveforward(40)
 
     stop_all()
@@ -130,7 +133,7 @@ def moveUntilObstacle():
 def checkRow():
     if(enes100.y > 1.2):
         return 1;
-    elif(enes100.y < 1.2 && enes100.y > 0.65):
+    elif(enes100.y < 1.2 and enes100.y > 0.65):
         return 2;
     else:
         return 3;
@@ -182,7 +185,10 @@ def turnLeftTo(targetTheta, speed=20):
     while abs(normalize_angle(currentTheta - targetTheta)) > tolerance:
         turnLeft(speed)
         time.sleep(0.05)
+        enes100.print("turning")
         currentTheta = normalize_angle(enes100.theta)
+    
+    enes100.print("FIN")
 
     stop_all()
     time.sleep(0.05)

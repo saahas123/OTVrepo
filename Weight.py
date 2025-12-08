@@ -1,23 +1,24 @@
 from machine import ADC, Pin
 import time
 
-# ADC pin (replace with your actual pin)
-fsr_adc = ADC(Pin(32))
-fsr_adc.atten(ADC.ATTN_11DB)  # Full range: 0-3.3V
+# Initialize ADC on pin A0 (or GP26 on Pico)
+adc = ADC(Pin(26))   # Change pin number to the correct ADC pin for your board
 
-# Fixed resistor in voltage divider (Ohms)
-R_FIXED = 10000  # 10kΩ, adjust if needed
+while True:
+    total = 0
+    samples = 0
+    start = time.ticks_ms()
 
-def read_fsr_series():
-    adc = fsr_adc.read()  # 0-4095
-    voltage = adc / 4095 * 3.3  # convert ADC value to volts
-    
-    if voltage == 0:
-        fsr_res = float('inf')
-    else:
-        fsr_res = R_FIXED * (3.3 / voltage - 1)  # total resistance of both FSRs in series
-    
-    return adc, fsr_res
+    # Collect readings for 5 seconds
+    while time.ticks_diff(time.ticks_ms(), start) < 5000:
+        reading = adc.read_u16()   # 0–65535 on most boards
+        total += reading
+        samples += 1
+        time.sleep_ms(10)          # ~100 samples/sec (optional)
 
+    # Compute average
+    average = total / samples
 
+    print("Average reading over 5 seconds:", average)
 
+    time.sleep(1)   # Wait before next cycle

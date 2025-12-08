@@ -13,107 +13,64 @@ while not enes100.is_connected():
     print("Waiting for connection to Vision System...")
     time.sleep(1)
 
+enes100.print("Connected to Vision System!")
 print("Connected to Vision System!")
 
-while(enes100.theta != 0):
-    turnLeftTo(0)
 
+
+
+
+def navigateStage1():
+    if(CheckPositionStart() == "top"):
+             turnLeftTo(180)
+             moveUntilObj()
+             completeMission()
+             turnLeftTo(90);
+             
+    else:
+        turnLeftTo(360)
+        moveUntilObj()
+        completeMission()
+        turnRightTo(90);
+        
     
-    #while enes100.theta
-
-
-def navigateStage2():
-    l = 1.0      
-    a = 2.0      
-    prevRow = None
-
-    # -----------------------------
-    # PART 1: Move until reaching x < l
-    # -----------------------------
-    while enes100.x < l:
-        moveUntilObstacle()
-
-        row = checkRow()
-
-        if row == 1:
-            turnRightTo(math.radians(90))
-            move_until_row2()
-            turnLeftTo(math.radians(90))
-            prevRow = 1
-
-        elif row == 2:
-            if prevRow == 1:
-                turnRightTo(math.radians(90))
-                move_until_row3()
-                turnLeftTo(math.radians(90))
-
-            elif prevRow == 3:
-                turnLeftTo(math.radians(90))
-                move_until_row1()
-                turnRightTo(math.radians(90))
-
-            else:
-                turnLeftTo(math.radians(90))
-                move_until_row1()
-                turnRightTo(math.radians(90))
-
-        else:  # row == 3
-            turnLeftTo(math.radians(90))
-            move_until_row2()
-            turnRightTo(math.radians(90))
-            prevRow = 3
-
-
-    # -----------------------------
-    # PART 2: Move until x < a
-    # -----------------------------
-    prevRow = None
-
-    while enes100.x < a:
-        moveUntilObstacle()
-
-        row = checkRow()
-
-        if row == 1:
-            turnRightTo(math.radians(90))
-            move_until_row2()
-            turnLeftTo(math.radians(90))
-            prevRow = 1
-
-        elif row == 2:
-            if prevRow == 1:
-                turnRightTo(math.radians(90))
-                move_until_row3()
-                turnLeftTo(math.radians(90))
-
-            elif prevRow == 3:
-                turnLeftTo(math.radians(90))
-                move_until_row1()
-                turnRightTo(math.radians(90))
-
-            else:
-                turnLeftTo(math.radians(90))
-                move_until_row1()
-                turnRightTo(math.radians(90))
-
-        else:  # row == 3
-            turnLeftTo(math.radians(90))
-            move_until_row2()
-            turnRightTo(math.radians(90))
-            prevRow = 3
-            
-            
-
+def navigateStage3():
+    if(checkLog == false):
+        turnLeftTo(90)
+        moveUntilLog()
+        turnRightTo(90)
+        moveEnd()
+    else:
+        moveEnd()
 def moveUntilObstacle():
     while(Sensors.getUltra1 > 0.1 or Sensors.getUltra2>0.1):
-        move_forward(40)
+        moveforward(40)
+
+    stop_all()
+def move_until_row2UP():
+    while(enes100.y != 1.12):
+        moveforward(30)
+    stop_all()
+def move_until_row2DOWN():
+    while(enes100.y != 0.82):
+        moveforward(30)
+    stop_all()
+def move_until_row3():
+    while(enes100.y != 5):
+        moveforward(30)
 
     stop_all()
 
-def checkRow():
-    if(enes100.y > 1.2):
+def checkRowStart():
+     if(enes100.y > .9):
         return 1;
-    elif(enes100.y < 1.2 and enes100.y > 0.65):
+    else:
+        return 3;
+    
+def checkRow():
+    if(enes100.y > 1.52):
+        return 1;
+    elif(enes100.y < 1.52 and enes100.y > 0.42):
         return 2;
     else:
         return 3;
@@ -140,8 +97,8 @@ def normalize_angle(theta):
     # Keeps angle between -pi and +pi
     return math.atan2(math.sin(theta), math.cos(theta))
 
-def turnRightTo(targetTheta, speed=20):
-    tolerance = 0.05  # radians (~3 degrees)
+def turnRightTo(targetTheta):
+    tolerance = 0.07  # radians (~3 degrees)
 
     # Normalize target
     targetTheta = normalize_angle(targetTheta)
@@ -150,27 +107,120 @@ def turnRightTo(targetTheta, speed=20):
     currentTheta = normalize_angle(enes100.theta)
 
     while abs(normalize_angle(currentTheta - targetTheta)) > tolerance:
-        turnRight(speed)  # negative = turn right
+        turnRight(30)  # negative = turn right
         time.sleep(0.05)
         currentTheta = normalize_angle(enes100.theta)
 
     stop_all()
     time.sleep(0.05)
-def turnLeftTo(targetTheta, speed=20):
-    tolerance = 0.05
+def turnLeftTo(targetTheta):
+    tolerance = 0.07
 
     targetTheta = normalize_angle(targetTheta)
     currentTheta = normalize_angle(enes100.theta)
-    
+    turnLeft(30)
+
     while abs(normalize_angle(currentTheta - targetTheta)) > tolerance:
-        turnLeft(speed)
-        enes100.print("start left turn")
         time.sleep(0.05)
+        enes100.print("turning")
         currentTheta = normalize_angle(enes100.theta)
+    
+    enes100.print("FIN")
 
     stop_all()
-    enes100.print("end Left turn")
     time.sleep(0.05)
+    
+def navigateStage2():
+    l = 1.68     
+    a = 2.85      
+    prevRow = None
+
+    # -----------------------------
+    # PART 1: Move until reaching x < l
+    # -----------------------------
+    row = checkRowStart()
+    
+    while enes100.x < l:
+        moveUntilObstacle()
+
+        
+
+        if row == 1:
+            turnRightTo(270)
+            move_until_row2UP()
+            turnLeftTo(0)
+            prevRow = 1
+            row = 2
+        elif row == 2:
+            if prevRow == 1:
+                turnRightTo(270)
+                move_until_row3()
+                turnLeftTo(0)
+                row = 3
+
+            elif prevRow == 3:
+                turnLeftTo(90)
+                move_until_row1()
+                turnRightTo(0)
+                row = 1
+
+            else:
+                turnLeftTo(90)
+                move_until_row1()
+                turnRightTo(0)
+                row = 1
+
+        else:  # row == 3
+            turnLeftTo(90)
+            move_until_row2DOWN()
+            turnRightTo(0)
+            prevRow = 3
+            row = 2
+
+
+    # -----------------------------
+    # PART 2: Move until x < a
+    # -----------------------------
+    prevRow = None
+
+    while enes100.x < a:
+        moveUntilObstacle()
+
+
+        if row == 1:
+            turnRightTo(270)
+            move_until_row2UP()
+            turnLeftTo(0)
+            prevRow = 1
+
+        elif row == 2:
+            if prevRow == 1:
+                turnRightTo(270)
+                move_until_row3()
+                turnLeftTo(0)
+
+            elif prevRow == 3:
+                turnLeftTo(90)
+                move_until_row1()
+                turnRightTo(0)
+
+            else:
+                turnLeftTo(90)
+                move_until_row1()
+                turnRightTo(0)
+
+        else:  # row == 3
+            turnLeftTo(90)
+            move_until_row2DOWN()
+            turnRightTo(0)
+            prevRow = 3
+
+        
+    
+enes100.print("starting turn")
+
+
+
 
 
 

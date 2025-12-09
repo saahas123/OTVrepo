@@ -43,8 +43,8 @@ def navigateStage3():
     else:
         moveEnd()
 def moveUntilObstacle():
-    while(Sensors.getUltra1() > 15 or Sensors.getUltra2()>15):
-        move_forward(40)
+    while(Sensors.getUltra1() > 10 or Sensors.getUltra2()>10):
+        move_forward(50)
     stop_all()
 def move_until_row2UP():
     while(enes100.y != 1.12):
@@ -77,55 +77,66 @@ def checkRow():
 
 def move_until_row2():
     while abs(enes100.y - 1.0) > 0.05:
-        move_forward(40)
+        move_forward(50)
         time.sleep(0.1)  # small delay to prevent CPU overload
     stop_all()
 def move_until_row1():
     while abs(enes100.y - 1.5) > 0.05:
-        move_forward(40)
+        move_forward(50)
         time.sleep(0.1)
     stop_all()
 def move_until_row3():
     while abs(enes100.y - 0.5) > 0.05:
-        move_forward(40)
+        move_forward(50)
         time.sleep(0.1)
     stop_all()
 
 
-def normalize_angle(theta):
-    # Keeps angle between -pi and +pi
-    return math.atan2(math.sin(theta), math.cos(theta))
 
 def turnRightTo(targetTheta):
-    tolerance = 0.07  # radians (~3 degrees)
+    tolerance = 0.07  # about 4 degrees
 
-    # Normalize target
-    targetTheta = normalize_angle(targetTheta)
+    while True:
+        currentTheta = enes100.theta
+        error = targetTheta - currentTheta
 
-    # Read current angle
-    currentTheta = normalize_angle(enes100.theta)
+        # fix wrap-around
+        if error > math.pi:
+            error -= 2*math.pi
+        elif error < -math.pi:
+            error += 2*math.pi
 
-    while abs(normalize_angle(currentTheta - targetTheta)) > tolerance:
-        turnRight(30)  # negative = turn right
+        if abs(error) < tolerance:
+            break
+
+        turnRight(35)
         time.sleep(0.05)
-        currentTheta = normalize_angle(enes100.theta)
 
     stop_all()
     time.sleep(0.05)
+
 def turnLeftTo(targetTheta):
-    tolerance = 0.07
+    tolerance = 0.07  
 
-    targetTheta = normalize_angle(targetTheta)
-    currentTheta = normalize_angle(enes100.theta)
-    turnLeft(30)
+    while True:
+        currentTheta = enes100.theta
+        error = targetTheta - currentTheta
 
-    while abs(normalize_angle(currentTheta - targetTheta)) > tolerance:
+        # fix wrap-around
+        if error > math.pi:
+            error -= 2*math.pi
+        elif error < -math.pi:
+            error += 2*math.pi
+
+        if abs(error) < tolerance:
+            break
+
+        turnLeft(35)
         time.sleep(0.05)
-        currentTheta = normalize_angle(enes100.theta)
-    
 
     stop_all()
     time.sleep(0.05)
+
     
 def navigateStage2():
     l = 1.68     
@@ -142,17 +153,20 @@ def navigateStage2():
 
         
         enes100.print("starting nav")
+        enes100.print("row")
+
 
         if row == 1:
-            turnRightTo(90)
+            enes100.print("turn to 2")
+
+            turnRightTo(-1.56)
             move_until_row2UP()
             turnLeftTo(0)
             prevRow = 1
-            enes100.print("turn to 2")
             row = 2
         elif row == 2:
             if prevRow == 1:
-                turnRightTo(90)
+                turnRightTo(-1.57)
                 move_until_row3()
                 turnLeftTo(0)
                 row = 3
@@ -160,28 +174,29 @@ def navigateStage2():
 
 
             elif prevRow == 3:
-                turnLeftTo(270)
+                enes100.print(" turn to 1")
+                turnLeftTo(1.57)
                 move_until_row1()
                 turnRightTo(0)
                 row = 1
-                enes100.print(" turn to 1")
 
 
             else:
-                turnLeftTo(270)
+                enes100.print("starting turn 1")
+                turnLeftTo(1.57)
                 move_until_row1()
                 turnRightTo(0)
                 row = 1
-                enes100.print("starting turn 1")
 
 
-        else:  # row == 3
-            turnLeftTo(270)
+        else:
+            enes100.print("starting 2")
+            turnLeftTo(1.57)
             move_until_row2DOWN()
             turnRightTo(0)
             prevRow = 3
             row = 2
-            enes100.print("starting 2")
+            enes100.print("at 2")
 
 
 
@@ -196,34 +211,38 @@ def navigateStage2():
 
 
         if row == 1:
-            turnRightTo(90)
+            turnRightTo(-1.57)
             move_until_row2UP()
             turnLeftTo(0)
             prevRow = 1
 
         elif row == 2:
             if prevRow == 1:
-                turnRightTo(90)
+                turnRightTo(-1.57)
                 move_until_row3()
                 turnLeftTo(0)
 
             elif prevRow == 3:
-                turnLeftTo(270)
+                turnLeftTo(1.57)
                 move_until_row1()
                 turnRightTo(0)
 
             else:
-                turnLeftTo(270)
+                turnLeftTo(1.57)
                 move_until_row1()
                 turnRightTo(0)
 
         else:  # row == 3
-            turnLeftTo(270)
+            turnLeftTo(1.57)
             move_until_row2DOWN()
             turnRightTo(0)
             prevRow = 3
 
-        
+
+turnRightTo(-1.57)	
     
-enes100.print("starting turn")
-navigateStage2()
+
+
+
+
+

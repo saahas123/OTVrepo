@@ -1,0 +1,52 @@
+from machine import Pin, PWM, ADC
+import time
+
+# --- PIN SETUP ---
+IN1 = Pin(26, Pin.OUT)      # direction pin 1
+IN2 = Pin(25, Pin.OUT)      # direction pin 2
+ENA = PWM(Pin(14))          # enable pin (PWM)
+ENA.freq(1000)
+
+# Use GP28 (Pin 34) as ADC input
+adc = ADC(Pin(34))          # ADC2 on RP2040
+
+# --- HELPER FUNCTIONS ---
+def stop():
+    IN1.value(0)
+    IN2.value(0)
+    ENA.duty_u16(0)
+
+def extend(speed=65535):
+    IN1.value(1)
+    IN2.value(0)
+    ENA.duty_u16(speed)
+
+def retract(speed=65535):
+    IN1.value(0)
+    IN2.value(1)
+    ENA.duty_u16(speed)
+
+# --- RUN SEQUENCE ---
+extend(65535)
+time.sleep(4)
+stop()
+time.sleep(1)
+
+# Read ADC for 5 seconds
+total = 0
+samples = 0
+start = time.ticks_ms()
+
+while time.ticks_diff(time.ticks_ms(), start) < 7500:
+    reading = adc.read_u16()
+    total += reading
+    samples += 1
+    time.sleep_ms(10)
+
+average = total / samples
+print("Average reading over 5 seconds:", average)
+
+# Retract afterward
+retract(65535)
+time.sleep(4)
+stop()

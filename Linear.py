@@ -2,9 +2,9 @@ from machine import Pin, PWM
 import time
 
 # --- PIN SETUP ---
-IN1 = Pin(17, Pin.OUT)      # direction pin 1
-IN2 = Pin(16, Pin.OUT)      # direction pin 2
-ENA = PWM(Pin(5))          # enable pin (PWM)
+IN1 = Pin(26, Pin.OUT)      # direction pin 1
+IN2 = Pin(25, Pin.OUT)      # direction pin 2
+ENA = PWM(Pin(14))          # enable pin (PWM)
 ENA.freq(1000)              # 1 kHz PWM
 
 # --- HELPER FUNCTIONS ---

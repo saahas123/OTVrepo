@@ -4,7 +4,7 @@ from Motors import turnLeft, turnRight, move_forward, stop_all
 from machine import Pin, time_pulse_us
 import Sensors
 import math
-
+import mat
 
 enes100.begin("TheDropouts", "Material", 247, 1120)
 
@@ -15,7 +15,6 @@ while not enes100.is_connected():
 
 enes100.print("Connected to Vision System!")
 print("Connected to Vision System!")
-
 
 
 
@@ -237,12 +236,5 @@ def navigateStage2():
             move_until_row2DOWN()
             turnRightTo(0)
             prevRow = 3
-
-
-turnRightTo(-1.57)	
-    
-
-
-
 
 
